@@ -5,9 +5,15 @@
  */
 package Interfaz;
 
+import java.awt.Image;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+
 /**
  *
- * @author Asher
+ * @author Asher y Reynaldo
  */
 public class InterfazPrincipal extends javax.swing.JFrame {
 
@@ -16,6 +22,15 @@ public class InterfazPrincipal extends javax.swing.JFrame {
      */
     public InterfazPrincipal() {
         initComponents();
+        IntroRec ventana = new IntroRec();
+        ventana.setVisible(true);
+        try {
+            Image i = ImageIO.read(getClass().getResource("/img/llave-con-sistema-de-regulacion-para-diferentes-tamanos-de-tuercas_318-62181.jpg"));
+            setIconImage(i);
+        } catch (IOException ex) {
+            Logger.getLogger(IntroRec.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -404,7 +419,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfazPrincipal().setVisible(true);
+                new InterfazPrincipal().setVisible(false);
             }
         });
     }
