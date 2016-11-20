@@ -13,5 +13,30 @@ public class Proceso {
     private int ID;
     private int recursosMaximos[];
     
+    //Constructor
+      public Proceso(int ID, int[] recursosMaximos) {
+        this.ID = ID;
+        this.recursosMaximos = recursosMaximos;
+    }
+      
+    //Sets y Gets
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int[] getRecursosMaximos() {
+        return recursosMaximos;
+    }
+
+    public void setRecursosMaximos(int[] recursosMaximos) {
+        this.recursosMaximos = recursosMaximos;
+    }
+      
+  
     
 }
