@@ -16,15 +16,18 @@ public class Prediccion {
    private int recursos[];
    private int disponibles[];
    private int posicionI;
+   private int bloqueados[][];
+   private int 
    
    //Constructor 
 
-    public Prediccion(int[][] allocation, int[][] maximo, int[] recursos, int[] disponibles) {
+    public Prediccion(int[][] allocation, int[][] maximo, int[] recursos, int[] disponibles, int[][] bloqueados) {
         this.allocation = allocation;
         this.maximo = maximo;
         this.recursos = recursos;
         posicionI=0;
         this.disponibles = disponibles;
+        this.bloqueados=bloqueados;
     }
 
     
@@ -77,26 +80,76 @@ public class Prediccion {
     public void setRecursos(int[] recursos) {
         this.recursos = recursos;
     }
+
+    public int[][] getBloqueados() {
+        return bloqueados;
+    }
+
+    public void setBloqueados(int[][] bloqueados) {
+        this.bloqueados = bloqueados;
+    }
+    
     
     
     //Metodos Propios
-    private void insertarProceso(int[] max){//Insercion de proceso cuando se crea
+    private void insertarProceso(int[] max, int posicion){//Insercion de proceso cuando se crea
         
         for(int j=0; j<recursos.length; j++){
-            allocation[posicionI][j]=0;
+            allocation[posicion][j]=0;
         }    
         
-        for(int j=0; j<recursos.length; j++){
-            maximo[posicionI][j]=max[j];
+        for(int j=0; j<max.length; j++){
+            maximo[posicion][j]=max[j];
         }
         
-        posicionI++;
+        if(posicion>posicionI)
+            posicionI=posicion;
     }
     
-    private void alocar(int [] al, int proceso){//Inserion en la matriz allocation cuando se hace una solicitud
+    private void asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
         
         for(int j=0; j<recursos.length; j++){
-            allocation[proceso][j]=al[j];
+            allocation[posicion][j]=allocation[posicion][j]+al[j];
+        }
+        
+    }
+    
+    private void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
+        for (int i = 0; i < request.length; i++) {
+         disponibles[i]=disponibles[i]+allocation[posicion][i];
+         bloqueados[posicion][i]=request[i]+allocation[posicion][i];
+         allocation[posicion][i]=0;      
+        }       
+    }
+    
+    private void chequeaBloqueados(){//para saber si desbloquear algun proceso
+        for (int i = 0; i <bloqueados.length; i++) {
+            boolean go=true;
+            boolean vacio=true;
+            for (int j = 0; j < bloqueados[i].length; j++) {
+                if(bloqueados[i][j]!=0)
+                    vacio=false;
+                if(bloqueados[i][j]>disponibles[j])
+                    go=false;
+            }
+            if(vacio)
+                go=false;
+            
+            if(go){
+                int request[] = new int[bloqueados[i].length];
+                for (int j = 0; j < bloqueados[i].length; j++) {
+                    request[j]=bloqueados[i][j];
+                }
+                asignar(request, i);
+                boolean asignar=calcular(i);
+                if(!asignar){
+                    int a[]= new int[bloqueados[i].length];
+                    for (int j = 0; j < bloqueados[i].length; j++) {
+                        a[j]=0;   
+                    }
+                    bloquear(i,a);
+                }
+            }
         }
         
     }
@@ -118,7 +171,7 @@ public class Prediccion {
        return true;
     }
     
-    private void calcular(){
+    private boolean calcular(int posicion){//banquero
         calc_need();
         boolean [] listo = new boolean[posicionI];
         int aux=0;
@@ -137,10 +190,14 @@ public class Prediccion {
              if(!asignado) 
                  break;  //si no hay asignacion
         }
-       if(aux==posicionI)  //si todos los procesos se asignaron
+       if(aux==posicionI){  //si todos los procesos se asignaron
         System.out.println("\nSe asigno con seguridad");
-       else
+        return true;
+       }
+       else{
         System.out.println("No todos los procesos pueden asignarse con seguridad");
+        return false;
+       }
     }
             
 
