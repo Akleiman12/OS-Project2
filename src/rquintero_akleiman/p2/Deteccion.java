@@ -7,17 +7,17 @@ package rquintero_akleiman.p2;
 
 /**
  *
- * @author Asher
+ * @author Asher y Reynaldo
  */
 public class Deteccion {
     private int allocacion[][];
     private int recursos[];
-    private int request[];
+    private int request[][];
     private int auxiliar[];
     private boolean marca[];
     
     //Constructor
-    public Deteccion(int[][] allocacion, int[] recursos, int[] request, int[] auxiliar, boolean[] marca) {
+    public Deteccion(int[][] allocacion, int[] recursos, int[][] request, int[] auxiliar, boolean[] marca) {
         this.allocacion = allocacion;
         this.recursos = recursos;
         this.request = request;
@@ -43,11 +43,11 @@ public class Deteccion {
         this.recursos = recursos;
     }
 
-    public int[] getRequest() {
+    public int[][] getRequest() {
         return request;
     }
 
-    public void setRequest(int[] request) {
+    public void setRequest(int[][] request) {
         this.request = request;
     }
 
@@ -69,6 +69,6 @@ public class Deteccion {
 
     
     
-    //Metodos propios
+    //Metodos Propios
     
 }
