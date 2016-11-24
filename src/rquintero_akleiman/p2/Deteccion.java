@@ -7,47 +7,69 @@ package rquintero_akleiman.p2;
 
 /**
  *
- * @author Asher
+ * @author Asher y Reynaldo
  */
 public class Deteccion {
-    private int allocacion[][];
-    private int recursos[];
-    private int request[];
+    private int allocation[][];
+    private int disponible[];
+    private int request[][];
+    private int maximo[][];
     private int auxiliar[];
     private boolean marca[];
+    private int posicionI;
     
     //Constructor
-    public Deteccion(int[][] allocacion, int[] recursos, int[] request, int[] auxiliar, boolean[] marca) {
-        this.allocacion = allocacion;
-        this.recursos = recursos;
+    public Deteccion(int[][] allocation, int[] recursos, int[][] request, int[] auxiliar, boolean[] marca, int[][] maximo) {
+        this.allocation = allocation;
+        this.disponible = recursos;
         this.request = request;
         this.auxiliar = auxiliar;
         this.marca = marca;
+        this.maximo = maximo;
+        posicionI=0;
+    }
+     
+   
+
+    //Sets y gets
+    
+     public int[][] getMaximo() {
+        return maximo;
+    }
+     
+    public void setMaximo(int[][] maximo) {
+        this.maximo = maximo;
+    }
+
+    public int getPosicionI() {
+        return posicionI;
+    }
+
+    public void setPosicionI(int posicionI) {
+        this.posicionI = posicionI;
     }
     
-    //Sets y gets
-
-    public int[][] getAllocacion() {
-        return allocacion;
+    public int[][] getAllocation() {
+        return allocation;
     }
 
-    public void setAllocacion(int[][] allocacion) {
-        this.allocacion = allocacion;
+    public void setAllocation(int[][] allocacion) {
+        this.allocation = allocacion;
     }
 
-    public int[] getRecursos() {
-        return recursos;
+    public int[] getDisponible() {
+        return disponible;
     }
 
-    public void setRecursos(int[] recursos) {
-        this.recursos = recursos;
+    public void setDisponible(int[] recursos) {
+        this.disponible = recursos;
     }
 
-    public int[] getRequest() {
+    public int[][] getRequest() {
         return request;
     }
 
-    public void setRequest(int[] request) {
+    public void setRequest(int[][] request) {
         this.request = request;
     }
 
@@ -69,6 +91,36 @@ public class Deteccion {
 
     
     
-    //Metodos propios
+    //Metodos Propios
     
+    private void insertarProceso(int[] max){//Insercion de proceso cuando se crea
+        for (int i = 0; i < maximo.length; i++) {
+            maximo[posicionI][i]=max[i];
+        }
+        
+        marca[posicionI]=false;
+        
+        posicionI++;
+    }
+    
+    private void requestProceso(int[] request){
+             for(int j=0; j<disponible.length; j++){
+            allocation[posicionI][j]=request[j];
+        }  
+    }
+    
+    
+    private void calcular(int [] pedido){//Algoritmo de deteccion
+        for (int i = 0; i < disponible.length; i++) {
+            auxiliar[i]=disponible[i];
+        }
+        
+        for (int i = 0; i < pedido.length; i++) {
+            
+            
+            
+        }
+        
+        
+    }
 }
