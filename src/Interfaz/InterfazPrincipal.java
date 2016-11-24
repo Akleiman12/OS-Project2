@@ -19,10 +19,10 @@ import javax.swing.JOptionPane;
  */
 public class InterfazPrincipal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form InterfazPrincipal
-     */
-    public InterfazPrincipal() {
+    
+    String recursos[];
+    
+    public InterfazPrincipal(String[] vector) {
         initComponents();
         try {
             Image i = ImageIO.read(getClass().getResource("/img/llave-con-sistema-de-regulacion-para-diferentes-tamanos-de-tuercas_318-62181.jpg"));
@@ -30,6 +30,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(IntroRec.class.getName()).log(Level.SEVERE, null, ex);
         }
+        recursos = vector;
+        int aux=0;
+        while(recursos[aux]!=null){
+            comboRecPros.addItem(recursos[aux]);
+            aux=aux+2;
+        }
+        
+        
         
     }
 
@@ -67,20 +75,32 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         infoPre = new javax.swing.JTextArea();
-        cantProsP = new javax.swing.JLabel();
-        cantBloqP = new javax.swing.JLabel();
-        cantFinP = new javax.swing.JLabel();
+        pTotal = new javax.swing.JLabel();
+        pBloqTot = new javax.swing.JLabel();
+        pBloq = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        pTotalC = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        pTiempo = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        pFin = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        cantProsD = new javax.swing.JLabel();
-        cantBloqD = new javax.swing.JLabel();
-        cantFinD = new javax.swing.JLabel();
-        cantElimD = new javax.swing.JLabel();
+        dTotal = new javax.swing.JLabel();
+        dBloqTot = new javax.swing.JLabel();
+        dBloq = new javax.swing.JLabel();
+        dTotalC = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         infoDet = new javax.swing.JTextArea();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        dElim = new javax.swing.JLabel();
+        dTiempo = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        dFin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Simulacion S.O.");
@@ -167,7 +187,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(agregarRecPros, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(finalizarPros, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                        .addComponent(finalizarPros, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                         .addGap(5, 5, 5))
                     .addComponent(jScrollPane4))
                 .addGap(20, 20, 20))
@@ -236,7 +256,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Prediccion"));
 
-        jLabel7.setText("Numero de Procesos:");
+        jLabel7.setText("Numero de Procesos en el Sistema:");
 
         jLabel8.setText("Procesos Bloqueados:");
 
@@ -246,11 +266,23 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         infoPre.setRows(5);
         jScrollPane2.setViewportView(infoPre);
 
-        cantProsP.setText("0");
+        pTotal.setText("0");
 
-        cantBloqP.setText("0");
+        pBloqTot.setText("0");
 
-        cantFinP.setText("0");
+        pBloq.setText("0");
+
+        jLabel10.setText("Procesos Totales Creados:");
+
+        pTotalC.setText("0");
+
+        jLabel12.setText("Tiempo del Algoritmo:");
+
+        pTiempo.setText("0");
+
+        jLabel18.setText("Procesos Bloqueados Totales:");
+
+        pFin.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -259,21 +291,29 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel8))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantFinP))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantProsP))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantBloqP)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(pTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(pBloqTot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(pBloq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel12)))
+                            .addComponent(pFin))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pTotalC)
+                            .addComponent(pTiempo))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -283,15 +323,23 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(cantProsP))
+                    .addComponent(pTotal)
+                    .addComponent(jLabel10)
+                    .addComponent(pTotalC))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(cantBloqP))
+                    .addComponent(pBloqTot)
+                    .addComponent(jLabel12)
+                    .addComponent(pTiempo)
+                    .addComponent(jLabel18))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(cantFinP))
+                    .addComponent(pBloq)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pFin)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2)
                 .addContainerGap())
@@ -299,7 +347,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Deteccion"));
 
-        jLabel13.setText("Numero de Procesos:");
+        jLabel13.setText("Numero de Procesos en el Sistema:");
 
         jLabel14.setText("Procesos Bloqueados:");
 
@@ -307,17 +355,29 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         jLabel16.setText("Procesos Eliminados:");
 
-        cantProsD.setText("0");
+        dTotal.setText("0");
 
-        cantBloqD.setText("0");
+        dBloqTot.setText("0");
 
-        cantFinD.setText("0");
+        dBloq.setText("0");
 
-        cantElimD.setText("0");
+        dTotalC.setText("0");
 
         infoDet.setColumns(20);
         infoDet.setRows(5);
         jScrollPane3.setViewportView(infoDet);
+
+        jLabel20.setText("Procesos Totales Creados:");
+
+        jLabel21.setText("Tiempo del Algoritmo");
+
+        dElim.setText("0");
+
+        dTiempo.setText("0");
+
+        jLabel24.setText("Procesos Bloqueados Totales:");
+
+        dFin.setText("0");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -331,20 +391,31 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantProsD))
+                                .addGap(18, 18, 18)
+                                .addComponent(dTotal)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel20))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantBloqD))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantFinD))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantElimD)))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel24))
+                                .addGap(43, 43, 43)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(dBloq)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel21))
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(dBloqTot)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel16))
+                                    .addComponent(dFin))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dElim)
+                            .addComponent(dTotalC)
+                            .addComponent(dTiempo))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -354,21 +425,32 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(cantProsD))
+                    .addComponent(dTotal)
+                    .addComponent(jLabel20)
+                    .addComponent(dTotalC))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(cantBloqD))
+                    .addComponent(dBloqTot)
+                    .addComponent(jLabel16)
+                    .addComponent(dElim)
+                    .addComponent(jLabel24))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel21)
+                            .addComponent(dTiempo)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(dBloq))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(cantFinD))
+                    .addComponent(dFin))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(cantElimD))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -419,10 +501,22 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_agregarRecProsMouseReleased
 
     private void finalizarProsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_finalizarProsMouseReleased
-        if(!recProsTotal.getText().equals("")){
-            comboPros.addItem(idPros.getText());
+        if(!idPros.getText().equals("")){
+            if(!recProsTotal.getText().equals("")){
+                comboPros.addItem(idPros.getText());
+                comboRecPros.setSelectedIndex(0);
+                idPros.setText("");
+                cantrecpros.setText("");
+                recProsTotal.setText("");
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "El proceso creado no necesita recursos.", "Proceso "+idPros.getText()+" finalizado", JOptionPane.INFORMATION_MESSAGE);
+            }
+            pTotalC.setText(Integer.toString(Integer.parseInt(pTotalC.getText())+1));
+            dTotalC.setText(Integer.toString(Integer.parseInt(dTotalC.getText())+1));
+            
         }else{
-            JOptionPane.showMessageDialog(null, "El proceso creado no necesita recursos.", "Proceso "+idPros.getText()+" finalizado", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El proceso no puede ser creado sin un ID.", "Proceso no pudo ser creado", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_finalizarProsMouseReleased
 
@@ -478,28 +572,34 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarRecPros;
-    private javax.swing.JLabel cantBloqD;
-    private javax.swing.JLabel cantBloqP;
-    private javax.swing.JLabel cantElimD;
-    private javax.swing.JLabel cantFinD;
-    private javax.swing.JLabel cantFinP;
-    private javax.swing.JLabel cantProsD;
-    private javax.swing.JLabel cantProsP;
     private javax.swing.JTextField cantRec;
     private javax.swing.JTextField cantrecpros;
     private javax.swing.JComboBox<String> comboPros;
     private javax.swing.JComboBox<String> comboRec;
     private javax.swing.JComboBox<String> comboRecPros;
+    private javax.swing.JLabel dBloq;
+    private javax.swing.JLabel dBloqTot;
+    private javax.swing.JLabel dElim;
+    private javax.swing.JLabel dFin;
+    private javax.swing.JLabel dTiempo;
+    private javax.swing.JLabel dTotal;
+    private javax.swing.JLabel dTotalC;
     private javax.swing.JButton finalizarPros;
     private javax.swing.JTextField idPros;
     private javax.swing.JTextArea infoDet;
     private javax.swing.JTextArea infoPre;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -514,6 +614,12 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JLabel pBloq;
+    private javax.swing.JLabel pBloqTot;
+    private javax.swing.JLabel pFin;
+    private javax.swing.JLabel pTiempo;
+    private javax.swing.JLabel pTotal;
+    private javax.swing.JLabel pTotalC;
     private javax.swing.JTextArea recProsTotal;
     private javax.swing.JButton solicitud;
     // End of variables declaration//GEN-END:variables

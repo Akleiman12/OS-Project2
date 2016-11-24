@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
  */
 public class IntroRec extends javax.swing.JFrame {
 
-    /**
-     * Creates new form IntroRec
-     */
+    String recursos[]=new String[200];
+    int pos;
+    
     public IntroRec() {
         initComponents();
         try {
@@ -29,6 +29,7 @@ public class IntroRec extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(IntroRec.class.getName()).log(Level.SEVERE, null, ex);
         }
+        pos=0;
     }
 
     /**
@@ -146,7 +147,7 @@ public class IntroRec extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseReleased
-        InterfazPrincipal a = new InterfazPrincipal();
+        InterfazPrincipal a = new InterfazPrincipal(recursos);
         a.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_jButton1MouseReleased
@@ -155,6 +156,10 @@ public class IntroRec extends javax.swing.JFrame {
     try {
         int cant = Integer.parseInt(cantrec.getText());
         listaRec.append(idrec.getText()+" "+cant+"\n");
+        recursos[pos]=idrec.getText();
+        pos++;
+        recursos[pos]=cantrec.getText();
+        pos++;
         idrec.setText("");
         cantrec.setText("");
     } catch (Exception e) {
