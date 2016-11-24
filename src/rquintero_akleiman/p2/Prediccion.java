@@ -17,17 +17,28 @@ public class Prediccion {
    private int disponibles[];
    private int posicionI;
    private int bloqueados[][];
-   private int 
+   private int bloqueadosActual;
+   private int bloqueadosTotal;
+   private int procesosTotal;
+   private long tiempo;
+   private int procesosFinalizados;
+   private int finalizados[];
    
    //Constructor 
 
-    public Prediccion(int[][] allocation, int[][] maximo, int[] recursos, int[] disponibles, int[][] bloqueados) {
+    public Prediccion(int[][] allocation, int[][] maximo, int[] recursos, int[] disponibles, int[][] bloqueados, int[] finalizados){
         this.allocation = allocation;
         this.maximo = maximo;
         this.recursos = recursos;
         posicionI=0;
         this.disponibles = disponibles;
         this.bloqueados=bloqueados;
+        this.finalizados=finalizados;
+        bloqueadosActual=0;
+        bloqueadosTotal=0;
+        procesosTotal=0;
+        tiempo=0;
+        procesosFinalizados=0;
     }
 
     
@@ -88,12 +99,53 @@ public class Prediccion {
     public void setBloqueados(int[][] bloqueados) {
         this.bloqueados = bloqueados;
     }
+
+    public int getBloqueadosActual() {
+        return bloqueadosActual;
+    }
+
+    public void setBloqueadosActual(int bloqueadosActual) {
+        this.bloqueadosActual = bloqueadosActual;
+    }
+
+    public int getBloqueadosTotal() {
+        return bloqueadosTotal;
+    }
+
+    public void setBloqueadosTotal(int bloqueadosTotal) {
+        this.bloqueadosTotal = bloqueadosTotal;
+    }
+
+    public int getProcesosTotal() {
+        return procesosTotal;
+    }
+
+    public void setProcesosTotal(int procesosTotal) {
+        this.procesosTotal = procesosTotal;
+    }
+
+    public long getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(long tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public int getProcesosFinalizados() {
+        return procesosFinalizados;
+    }
+
+    public void setProcesosFinalizados(int procesosFinalizados) {
+        this.procesosFinalizados = procesosFinalizados;
+    }
     
     
     
     //Metodos Propios
+    
     private void insertarProceso(int[] max, int posicion){//Insercion de proceso cuando se crea
-        
+        procesosTotal++;
         for(int j=0; j<recursos.length; j++){
             allocation[posicion][j]=0;
         }    
@@ -106,23 +158,82 @@ public class Prediccion {
             posicionI=posicion;
     }
     
-    private void asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
+    private void finalizar(int posicion){
+        boolean finalizo=true;
+        for (int i = 0; i < allocation[posicion][i]; i++) {
+            if(allocation[posicion][i]!=maximo[posicion][i])
+                finalizo=false;
+        }
+        if(finalizo){
+            for (int i = 0; i < allocation[posicion][i]; i++) {
+            allocation[posicion][i]=maximo[posicion][i]=0;
+        }
+         finalizados[posicion]=1;
+         procesosFinalizados++;
+        }
+            
+    }
+    private boolean checkFinalizo(int posicion){
+        if(finalizados[posicion]!=0)
+            return true;
+        else
+            return false;
         
-        for(int j=0; j<recursos.length; j++){
-            allocation[posicion][j]=allocation[posicion][j]+al[j];
+    }
+    private boolean asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
+        boolean desbloquea=true;
+        boolean bloqueado=false;
+        for (int j = 0; j < bloqueados[posicion].length; j++) {
+            if(bloqueados[posicion][j]!=al[j])
+                desbloquea=false;
+            if(bloqueados[posicion][j]!=0)
+                bloqueado=true;
+            
+        }
+        if(desbloquea){
+            desbloquear(posicion);
+            return true;
+        }
+        else if(!bloqueado){
+            boolean permitir=true;
+            for (int i = 0; i < recursos.length; i++) {
+                if(al[i]>recursos[i])
+                    permitir=false;
+            }
+            if(permitir){
+                for(int j=0; j<recursos.length; j++){
+                    allocation[posicion][j]=allocation[posicion][j]+al[j];
+                    recursos[j]=recursos[j]-al[j];
+                }
+            }
+            else{
+                bloquear(posicion, al);
+            }
+            return true;
+        }
+        else{
+            return false;
         }
         
     }
-    
+    private void desbloquear (int posicion){
+        for (int i = 0; i < bloqueados[posicion].length; i++) {
+             allocation[posicion][i]=allocation[posicion][i]+bloqueados[posicion][i];
+             bloqueados[posicion][i]=0;
+        }
+        bloqueadosActual--;
+        
+    }
     private void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
         for (int i = 0; i < request.length; i++) {
-         disponibles[i]=disponibles[i]+allocation[posicion][i];
-         bloqueados[posicion][i]=request[i]+allocation[posicion][i];
-         allocation[posicion][i]=0;      
-        }       
+         bloqueados[posicion][i]=request[i];
+         allocation[posicion][i]=allocation[posicion][i]-request[i];
+        }
+        bloqueadosActual++;
+        bloqueadosTotal++;
     }
     
-    private void chequeaBloqueados(){//para saber si desbloquear algun proceso
+    /*private void chequeaBloqueados(){//para saber si desbloquear algun proceso
         for (int i = 0; i <bloqueados.length; i++) {
             boolean go=true;
             boolean vacio=true;
@@ -152,7 +263,7 @@ public class Prediccion {
             }
         }
         
-    }
+    }*/
     
     void calc_need(){//donde se calcula la matriz necesidad
        for(int i=0;i<posicionI;i++){
@@ -199,7 +310,22 @@ public class Prediccion {
         return false;
        }
     }
-            
+    private void correr(int posicion, int[] request){
+        long startTime = System.nanoTime();
+        boolean finalizo=checkFinalizo(posicion);
+        if(!finalizo){
+            boolean paso=asignar(request, posicion);
+            if(paso){
+                if(!calcular(posicion))
+                    bloquear(posicion, request);
+            }
+            else
+                System.out.println("SE NEGO LA SOLICITUD");
+        }
+        long finishTime = System.nanoTime();
+        tiempo=(finishTime-startTime)/1000000;
+        
+    }
 
 
 }
