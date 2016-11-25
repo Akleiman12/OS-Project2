@@ -369,7 +369,7 @@ public class Deteccion {
         
     }
     
-   public void correr(int posicion, int[] request){
+   public int[] correr(int posicion, int[] request){
         long startTime = System.nanoTime();
         boolean finalizo=checkFinalizo(posicion);
         boolean eliminado=checkEliminado(posicion);
@@ -385,13 +385,6 @@ public class Deteccion {
        }
         long finishTime = System.nanoTime();
         tiempo=(finishTime-startTime)/1000000;
-        
-        for (int k = 0; k <disponible.length; k++) {
-                System.out.println("recurso disponible"+k+" : "+disponible[k]);
-                System.out.println("recurso pedido"+k+" : "+request[k]);
-                System.out.println("Maximo: "+maximo[posicion][k]+" Ocupado: "+allocation[posicion][k]);
-                
-                
-        }
+        return eliminar;
     }
 }
