@@ -10,30 +10,45 @@ package rquintero_akleiman.p2;
  * @author Asher y Reynaldo
  */
 public class Prediccion {
-   private int allocation [][];//matriz asignacion
-   private int maximo[][];//maximo de recursos por proceso
-   private int necesidad[][];//matriz necesidad
+   private int allocation [][] = new int [150][150];//matriz asignacion
+   private int maximo[][] = new int [150][150];//maximo de recursos por proceso
+   private int necesidad[][] = new int [150][150];//matriz necesidad
    private int recursos[];//recursos del sistema maximo
    private int disponibles[];//recursos disponibles del sitema
    private int posicionI;
-   private int bloqueados[][];
+   private int bloqueados[][] = new int [150][150];
    private int bloqueadosActual;
    private int bloqueadosTotal;
    private int procesosTotal;
    private long tiempo;
    private int procesosFinalizados;
-   private int finalizados[];
+   private int finalizados[] = new int [150];
    
    //Constructor 
 
-    public Prediccion(int[][] allocation, int[][] maximo, int[] recursos, int[] disponibles, int[][] bloqueados, int[] finalizados){
-        this.allocation = allocation;
-        this.maximo = maximo;
+    public Prediccion(int[] recursos, int[] disponibles){
+        for (int i = 0; i < 150; i++) {
+            for (int j = 0; j < 150; j++) {
+                allocation[i][j]=0;
+            }
+        }
+        
+        for (int i = 0; i < 150; i++) {
+            for (int j = 0; j < 150; j++) {
+                maximo[i][j]=0;
+            }
+        }
         this.recursos = recursos;
         posicionI=0;
         this.disponibles = disponibles;
-        this.bloqueados=bloqueados;
-        this.finalizados=finalizados;
+        for (int i = 0; i < 150; i++) {
+            for (int j = 0; j < 150; j++) {
+                bloqueados[i][j]=0;
+            }
+        }
+        for (int i = 0; i < 150; i++) {   
+                finalizados[i]=0;    
+        }
         bloqueadosActual=0;
         bloqueadosTotal=0;
         procesosTotal=0;
@@ -268,7 +283,7 @@ public class Prediccion {
     }*/
     
     void calc_need(){//donde se calcula la matriz necesidad
-       for(int i=0;i<posicionI;i++){
+       for(int i=0;i<allocation.length;i++){
             for(int j=0;j<recursos.length;j++){ 
                 necesidad[i][j]=maximo[i][j]-allocation[i][j];
             }
@@ -286,11 +301,11 @@ public class Prediccion {
     
     private boolean calcular(int posicion){//banquero
         calc_need();
-        boolean [] listo = new boolean[posicionI];
+        boolean [] listo = new boolean[allocation.length];
         int aux=0;
-        while(aux<posicionI){
+        while(aux<allocation.length){
             boolean asignado=false;
-            for(int i=0;i<posicionI;i++){
+            for(int i=0;i<allocation.length;i++){
                 if(!listo[i] && check(i)){  //se trata de asignar
                  for(int k=0;k<recursos.length;k++){
                     disponibles[k]=disponibles[k]-necesidad[i][k]+maximo[i][k];
@@ -303,7 +318,7 @@ public class Prediccion {
              if(!asignado) 
                  break;  //si no hay asignacion
         }
-       if(aux==posicionI){  //si todos los procesos se asignaron
+       if(aux==allocation.length){  //si todos los procesos se asignaron
         System.out.println("\nSe asigno con seguridad");
         return true;
        }
@@ -320,6 +335,8 @@ public class Prediccion {
             if(paso){
                 if(!calcular(posicion))
                     bloquear(posicion, request);
+                else 
+                    finalizar(posicion);
             }
             else
                 System.out.println("SE NEGO LA SOLICITUD");
