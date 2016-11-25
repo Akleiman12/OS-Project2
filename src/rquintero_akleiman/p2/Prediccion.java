@@ -223,10 +223,13 @@ public class Prediccion {
                 for(int j=0; j<recursos.length; j++){
                     allocation[posicion][j]=allocation[posicion][j]+al[j];
                     disponibles[j]=disponibles[j]-al[j];
+                    for (int k = 0; k <disponibles.length; k++) {
+            System.out.println("recurso "+k+" : "+disponibles[k]);
+        }
                 }
             }
             else{
-                bloquear(posicion, al);
+                bloquear(posicion, al, 0);
             }
             return true;
         }
@@ -243,13 +246,23 @@ public class Prediccion {
         bloqueadosActual--;
         
     }
-    public void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
-        for (int i = 0; i < request.length; i++) {
-         bloqueados[posicion][i]=request[i];
-         allocation[posicion][i]=allocation[posicion][i]-request[i];
+    public void bloquear(int posicion, int[] request, int a){//Bloqueado de proceso por no cumplir el requerimiento     
+        if(a==1){
+            for (int i = 0; i < request.length; i++) {
+             bloqueados[posicion][i]=request[i];
+             allocation[posicion][i]=allocation[posicion][i]-request[i];
+            }
+            bloqueadosActual++;
+            bloqueadosTotal++;
         }
-        bloqueadosActual++;
-        bloqueadosTotal++;
+        else
+        {
+          for (int i = 0; i < request.length; i++) {
+             bloqueados[posicion][i]=request[i];
+            }
+            bloqueadosActual++;
+            bloqueadosTotal++;  
+        }
     }
     
     /*private void chequeaBloqueados(){//para saber si desbloquear algun proceso
@@ -292,10 +305,10 @@ public class Prediccion {
         }
     }
     
-    public boolean check(int i){
+    public boolean check(int i, int[] auxiliar){
        //se chequea si se pueden asignar todos los recursos
        for(int j=0;j<recursos.length;j++){
-       if(disponibles[j]<necesidad[i][j])
+       if(auxiliar[j]<necesidad[i][j])
           return false;
        }
        return true;
@@ -305,14 +318,20 @@ public class Prediccion {
         calc_need();
         boolean [] listo = new boolean[allocation.length];
         int aux=0;
+
+        int[] auxiliar = new int[150];
+        for (int j = 0; j <disponibles.length; j++) {
+                        auxiliar[j]=disponibles[j];
+                    }
         while(aux<allocation.length){
             boolean asignado=false;
             for(int i=0;i<allocation.length;i++){
-                if(!listo[i] && check(i)){  //se trata de asignar
+                if(!listo[i] && check(i, auxiliar)){  //se trata de asignar
+                    
+                    
                  for(int k=0;k<recursos.length;k++){
-                    disponibles[k]=disponibles[k]-necesidad[i][k]+maximo[i][k];
+                    auxiliar[k]=auxiliar[k]-necesidad[i][k]+maximo[i][k];
                  }
-                 System.out.println("Proceso asignado: "+i);
                  asignado=listo[i]=true;
                  aux++;
              }
@@ -336,7 +355,7 @@ public class Prediccion {
             boolean paso=asignar(request, posicion);
             if(paso){
                 if(!calcular(posicion))
-                    bloquear(posicion, request);
+                    bloquear(posicion, request, 1);
                 else 
                     finalizar(posicion);
             }
@@ -345,6 +364,8 @@ public class Prediccion {
         }
         long finishTime = System.nanoTime();
         tiempo=(finishTime-startTime)/1000000;
+        
+        
         
     }
 
