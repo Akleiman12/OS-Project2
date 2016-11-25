@@ -343,7 +343,7 @@ public class Deteccion {
         for (int i = 0; i < marca.length; i++) {
             if(!marca[i]){
                 eliminar(i);
-                procesosFinalizados++;
+                eliminados++;
                 logro=false;
             }
         }
@@ -357,7 +357,7 @@ public class Deteccion {
             disponible[i]=disponible[i]+allocation[posicion][i];
             allocation[posicion][i]=maximo[posicion][i]=0;
         }
-        
+
         eliminar[posicion]=1;
     }
     
@@ -375,10 +375,10 @@ public class Deteccion {
         boolean eliminado=checkEliminado(posicion);
         if(!finalizo && !eliminado){
             boolean logrado;
-            asignar(request, posicion);
+            boolean res=asignar(request, posicion);
             logrado=calcular();
             if(logrado)
-                finalizar(posicion);    
+                finalizar(posicion);
         }
         for (int i = 0; i < marca.length; i++) {
            marca[i]=false;
