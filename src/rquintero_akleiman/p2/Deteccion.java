@@ -227,6 +227,7 @@ public class Deteccion {
         }
          finalizados[posicion]=1;
          procesosFinalizados++;
+         procesosTotal--;
         }
             
     }
@@ -344,6 +345,7 @@ public class Deteccion {
             if(!marca[i]){
                 eliminar(i);
                 eliminados++;
+                procesosTotal--;
                 logro=false;
             }
         }

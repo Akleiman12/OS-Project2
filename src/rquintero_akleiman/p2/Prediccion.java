@@ -10,9 +10,9 @@ package rquintero_akleiman.p2;
  * @author Asher y Reynaldo
  */
 public class Prediccion {
-   private int allocation [][] = new int [150][150];//matriz asignacion
+   private int allocation [][] = new int [150][150];//matriz de asignacion
    private int maximo[][] = new int [150][150];//maximo de recursos por proceso
-   private int necesidad[][] = new int [150][150];//matriz necesidad
+   private int necesidad[][] = new int [150][150];//matriz de necesidad
    private int recursos[]= new int[150];//recursos del sistema maximo
    private int disponibles[]= new int[150];//recursos disponibles del sitema
    private int posicionI;
@@ -192,6 +192,7 @@ public class Prediccion {
             }
          finalizados[posicion]=1;
          procesosFinalizados++;
+         procesosTotal--;
         }
             
     }
