@@ -13,8 +13,8 @@ public class Prediccion {
    private int allocation [][] = new int [150][150];//matriz asignacion
    private int maximo[][] = new int [150][150];//maximo de recursos por proceso
    private int necesidad[][] = new int [150][150];//matriz necesidad
-   private int recursos[];//recursos del sistema maximo
-   private int disponibles[];//recursos disponibles del sitema
+   private int recursos[]= new int[150];//recursos del sistema maximo
+   private int disponibles[]= new int[150];//recursos disponibles del sitema
    private int posicionI;
    private int bloqueados[][] = new int [150][150];
    private int bloqueadosActual;
@@ -26,7 +26,7 @@ public class Prediccion {
    
    //Constructor 
 
-    public Prediccion(int[] recursos, int[] disponibles){
+    public Prediccion(int[] r, int[] d){
         for (int i = 0; i < 150; i++) {
             for (int j = 0; j < 150; j++) {
                 allocation[i][j]=0;
@@ -38,9 +38,14 @@ public class Prediccion {
                 maximo[i][j]=0;
             }
         }
-        this.recursos = recursos;
+        
+        for (int i = 0; i < 150; i++) {
+            recursos[i]=r[i];
+        }
         posicionI=0;
-        this.disponibles = disponibles;
+        for (int i = 0; i < 150; i++) {
+            disponibles[i]=d[i];
+        }
         for (int i = 0; i < 150; i++) {
             for (int j = 0; j < 150; j++) {
                 bloqueados[i][j]=0;
@@ -176,7 +181,6 @@ public class Prediccion {
     public void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
         boolean finalizo=true;
         for (int i = 0; i < allocation[posicion].length; i++) {
-            System.out.println("Maximo:"+maximo[posicion][i]+" allocation:"+allocation[posicion][i]);
             if(allocation[posicion][i]!=maximo[posicion][i])
                 finalizo=false;
         }
@@ -223,9 +227,6 @@ public class Prediccion {
                 for(int j=0; j<recursos.length; j++){
                     allocation[posicion][j]=allocation[posicion][j]+al[j];
                     disponibles[j]=disponibles[j]-al[j];
-                    for (int k = 0; k <disponibles.length; k++) {
-            System.out.println("recurso "+k+" : "+disponibles[k]);
-        }
                 }
             }
             else{
@@ -251,7 +252,10 @@ public class Prediccion {
             for (int i = 0; i < request.length; i++) {
              bloqueados[posicion][i]=request[i];
              allocation[posicion][i]=allocation[posicion][i]-request[i];
+             disponibles[i]=disponibles[i]+request[i];
+             
             }
+            
             bloqueadosActual++;
             bloqueadosTotal++;
         }
@@ -332,7 +336,8 @@ public class Prediccion {
                  for(int k=0;k<recursos.length;k++){
                     auxiliar[k]=auxiliar[k]-necesidad[i][k]+maximo[i][k];
                  }
-                 asignado=listo[i]=true;
+                 asignado=true;
+                 listo[i]=true;
                  aux++;
              }
             }
@@ -354,9 +359,10 @@ public class Prediccion {
         if(!finalizo){
             boolean paso=asignar(request, posicion);
             if(paso){
-                if(!calcular(posicion))
+                if(!calcular(posicion)){
+                    
                     bloquear(posicion, request, 1);
-                else 
+                }else 
                     finalizar(posicion);
             }
             else
@@ -365,6 +371,13 @@ public class Prediccion {
         long finishTime = System.nanoTime();
         tiempo=(finishTime-startTime)/1000000;
         
+        for (int k = 0; k <disponibles.length; k++) {
+                System.out.println("recurso disponible"+k+" : "+disponibles[k]);
+                System.out.println("recurso pedido"+k+" : "+request[k]);
+                System.out.println("Maximo: "+maximo[posicion][k]+" Ocupado: "+allocation[posicion][k]);
+                
+                
+        }
         
         
     }

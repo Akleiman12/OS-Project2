@@ -11,7 +11,7 @@ package rquintero_akleiman.p2;
  */
 public class Deteccion {
     private int allocation[][] = new int [150][150];
-    private int disponible[];
+    private int disponible[]= new int[150];
     private int request[][] = new int [150][150];
     private int maximo[][] = new int [150][150];
     private int auxiliar[] = new int [150];
@@ -27,13 +27,16 @@ public class Deteccion {
     private int eliminar []= new int [150];
     
     //Constructor
-    public Deteccion(int[] recursos) {
+    public Deteccion(int[] r) {
         for (int i = 0; i < 150; i++) {
             for (int j = 0; j < 150; j++) {
                 allocation[i][j]=0;
             }
         }
-        this.disponible = recursos;
+
+        for (int i = 0; i < 150; i++) {
+            disponible[i]=r[i];
+        }
         for (int i = 0; i < 150; i++) {
             for (int j = 0; j < 150; j++) {
                 request[i][j]=0;
@@ -284,8 +287,7 @@ public class Deteccion {
      
     public void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
         for (int i = 0; i < request.length; i++) {
-         bloqueados[posicion][i]=request[i];
-         allocation[posicion][i]=allocation[posicion][i]-request[i];
+            bloqueados[posicion][i]=request[i];
         }
         bloqueadosActual++;
         bloqueadosTotal++;
@@ -384,5 +386,12 @@ public class Deteccion {
         long finishTime = System.nanoTime();
         tiempo=(finishTime-startTime)/1000000;
         
+        for (int k = 0; k <disponible.length; k++) {
+                System.out.println("recurso disponible"+k+" : "+disponible[k]);
+                System.out.println("recurso pedido"+k+" : "+request[k]);
+                System.out.println("Maximo: "+maximo[posicion][k]+" Ocupado: "+allocation[posicion][k]);
+                
+                
+        }
     }
 }
