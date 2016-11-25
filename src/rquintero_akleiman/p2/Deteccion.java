@@ -202,7 +202,7 @@ public class Deteccion {
     
     //Metodos Propios
     
-    private void insertarProceso(int posicion, int[] max){//Insercion de proceso cuando se crea
+    public void insertarProceso(int posicion, int[] max){//Insercion de proceso cuando se crea
         for (int i = 0; i < maximo.length; i++) {
             maximo[posicion][i]=max[i];
         }
@@ -210,9 +210,9 @@ public class Deteccion {
         marca[posicion]=false;
     }
     
-     private void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
+    public void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
         boolean finalizo=true;
-        for (int i = 0; i < allocation[posicion][i]; i++) {
+        for (int i = 0; i < allocation[posicion].length; i++) {
             if(allocation[posicion][i]!=maximo[posicion][i])
                 finalizo=false;
         }
@@ -228,7 +228,7 @@ public class Deteccion {
             
     }
     
-     private boolean checkFinalizo(int posicion){//Ver si un proceso que hizo un requerimiento ya habia finalizado
+    public boolean checkFinalizo(int posicion){//Ver si un proceso que hizo un requerimiento ya habia finalizado
         if(finalizados[posicion]!=0)
             return true;
         else
@@ -236,7 +236,7 @@ public class Deteccion {
         
     }
      
-     private boolean asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
+    public boolean asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
         boolean desbloquea=true;
         boolean bloqueado=false;
         for (int j = 0; j < bloqueados[posicion].length; j++) {
@@ -273,7 +273,7 @@ public class Deteccion {
         
     }
      
-    private void desbloquear (int posicion){//Para desbloquear un proceso previamente bloqueado
+    public void desbloquear (int posicion){//Para desbloquear un proceso previamente bloqueado
         for (int i = 0; i < bloqueados[posicion].length; i++) {
              allocation[posicion][i]=allocation[posicion][i]+bloqueados[posicion][i];
              bloqueados[posicion][i]=0;
@@ -282,7 +282,7 @@ public class Deteccion {
         
     }
      
-    private void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
+    public void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
         for (int i = 0; i < request.length; i++) {
          bloqueados[posicion][i]=request[i];
          allocation[posicion][i]=allocation[posicion][i]-request[i];
@@ -291,7 +291,7 @@ public class Deteccion {
         bloqueadosTotal++;
     }
 
-    void calc_need(){//donde se calcula la matriz request
+    public void calc_need(){//donde se calcula la matriz request
        for(int i=0;i<allocation.length;i++){
             for(int j=0;j<disponible.length;j++){ 
                 request[i][j]=maximo[i][j]-allocation[i][j];
@@ -299,7 +299,7 @@ public class Deteccion {
         }
     }
     
-    private boolean calcular(){//Algoritmo de deteccion
+    public boolean calcular(){//Algoritmo de deteccion
         calc_need();
         
         for (int i = 0; i < allocation.length; i++) {//marcar los que no tuviesen nada asignado
@@ -348,7 +348,7 @@ public class Deteccion {
         return logro;
     }
     
-    private void eliminar(int posicion){
+    public void eliminar(int posicion){
         
         
         for (int i = 0; i <allocation[posicion][i]; i++) {
@@ -359,7 +359,7 @@ public class Deteccion {
         eliminar[posicion]=1;
     }
     
-    private boolean checkEliminado(int posicion){
+    public boolean checkEliminado(int posicion){
         if(eliminar[posicion]!=0)
             return true;
         else
@@ -367,7 +367,7 @@ public class Deteccion {
         
     }
     
-   private void correr(int posicion, int[] request){
+   public void correr(int posicion, int[] request){
         long startTime = System.nanoTime();
         boolean finalizo=checkFinalizo(posicion);
         boolean eliminado=checkEliminado(posicion);

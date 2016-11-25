@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class IntroRec extends javax.swing.JFrame {
 
-    String recursos[]=new String[200];
+    String recursos[]=new String[150];
     int pos;
     
     public IntroRec() {

@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import rquintero_akleiman.p2.*;
 
 /**
  *
@@ -21,6 +22,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     
     String recursos[];
+    int maxRecursos[];
+    int maxRecPros[];
+    int solicitudes[];
+    
+    int IDpros;
+    
+    Prediccion prediccion;
+    Deteccion deteccion;
     
     public InterfazPrincipal(String[] vector) {
         initComponents();
@@ -30,15 +39,39 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(IntroRec.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         recursos = vector;
         int aux=0;
         while(recursos[aux]!=null){
             comboRecPros.addItem(recursos[aux]);
+            comboRec.addItem(recursos[aux]);
             aux=aux+2;
         }
         
+        maxRecursos = new int[150];
+        aux=1;
+        int aux2=0;
+        while(recursos[aux]!=null){
+            maxRecursos[aux2]=Integer.parseInt(recursos[aux]);
+            aux=aux+2;
+            aux2++;
+        }
+        
+        maxRecPros = new int[150];
+        for (int i = 0; i < 150; i++) {
+            maxRecPros[i]=0;
+        }
+        
+        solicitudes = new int[150];
+        for (int i = 0; i < 150; i++) {
+            solicitudes[i]=0;
+        }
+        
+        IDpros=0;
         
         
+        prediccion = new Prediccion(maxRecursos, maxRecursos);
+        deteccion = new Deteccion(maxRecursos);
     }
 
     /**
@@ -137,6 +170,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         jLabel3.setText("Seleccione un Recurso:");
 
+        recProsTotal.setEditable(false);
         recProsTotal.setColumns(20);
         recProsTotal.setRows(5);
         jScrollPane4.setViewportView(recProsTotal);
@@ -262,6 +296,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         jLabel9.setText("Procesos Finalizados:");
 
+        infoPre.setEditable(false);
         infoPre.setColumns(20);
         infoPre.setRows(5);
         jScrollPane2.setViewportView(infoPre);
@@ -363,6 +398,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         dTotalC.setText("0");
 
+        infoDet.setEditable(false);
         infoDet.setColumns(20);
         infoDet.setRows(5);
         jScrollPane3.setViewportView(infoDet);
@@ -488,12 +524,21 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     private void agregarRecProsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_agregarRecProsMouseReleased
         try {
-            if(Integer.parseInt(cantrecpros.getText())<1){
+            if(Integer.parseInt(cantrecpros.getText())<1||comboRecPros.getSelectedIndex()==0){
                 JOptionPane.showMessageDialog(null, "Porfavor seleccione un recurso e indique una cantidad correcta.", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
-                recProsTotal.append(comboRecPros.getSelectedItem()+" "+Integer.parseInt(cantrecpros.getText())+"\n");
-                comboRecPros.setSelectedIndex(0);
-                cantrecpros.setText("");
+                if(Integer.parseInt(cantrecpros.getText())<= maxRecursos[comboRecPros.getSelectedIndex()-1]){
+                    if(maxRecPros[comboRecPros.getSelectedIndex()-1]==0){
+                        recProsTotal.append(comboRecPros.getSelectedItem()+" "+Integer.parseInt(cantrecpros.getText())+"\n");
+                        maxRecPros[comboRecPros.getSelectedIndex()-1]=Integer.parseInt(cantrecpros.getText());
+                        comboRecPros.setSelectedIndex(0);
+                        cantrecpros.setText("");
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Ya se tiene el total necesario para el recurso. Utilice el boton Limpiar para empezar denuevo si lo desea.", "Alerta", JOptionPane.WARNING_MESSAGE);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "No hay suficientes recursos en el sistema para cumplir los requisitos de este proceso", "Alerta", JOptionPane.WARNING_MESSAGE);
+                }
             }
         } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.toString()+"\n\nPorfavor introduzca un valor valido.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -503,14 +548,25 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private void finalizarProsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_finalizarProsMouseReleased
         if(!idPros.getText().equals("")){
             if(!recProsTotal.getText().equals("")){
+                
                 comboPros.addItem(idPros.getText());
+                prediccion.insertarProceso(maxRecPros, IDpros);
+                deteccion.insertarProceso(IDpros, maxRecPros);
+                
                 comboRecPros.setSelectedIndex(0);
                 idPros.setText("");
                 cantrecpros.setText("");
                 recProsTotal.setText("");
                 
-            }else{
+                for (int i = 0; i < 150; i++) {
+                    maxRecPros[i]=0;
+                }
+                
+                
+                IDpros++;
+            }else{    
                 JOptionPane.showMessageDialog(null, "El proceso creado no necesita recursos.", "Proceso "+idPros.getText()+" finalizado", JOptionPane.INFORMATION_MESSAGE);
+                idPros.setText("");
             }
             pTotalC.setText(Integer.toString(Integer.parseInt(pTotalC.getText())+1));
             dTotalC.setText(Integer.toString(Integer.parseInt(dTotalC.getText())+1));
@@ -522,12 +578,34 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     private void solicitudMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_solicitudMouseReleased
         try {
+            
             if(Integer.parseInt(cantRec.getText())<1 || comboPros.getSelectedItem().equals("Procesos") || comboRec.getSelectedItem().equals("Recursos")){
                 JOptionPane.showMessageDialog(null, "Porfavor seleccione un proceso, un recurso e indique una cantidad correcta.", "Error", JOptionPane.ERROR_MESSAGE);
+            
+            
             }else{
-                cantRec.setText("");
+                solicitudes[comboRec.getSelectedIndex()-1]=Integer.parseInt(cantRec.getText());
+                prediccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                deteccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                
+                pBloqTot.setText(Integer.toString(prediccion.getBloqueadosTotal()));
+                pBloq.setText(Integer.toString(prediccion.getBloqueadosActual()));
+                pFin.setText(Integer.toString(prediccion.getProcesosFinalizados()));
+                pTiempo.setText(Long.toString(prediccion.getTiempo()));
+                
+                dBloqTot.setText(Integer.toString(deteccion.getBloqueadosTotal()));
+                dBloq.setText(Integer.toString(deteccion.getBloqueadosActual()));
+                dFin.setText(Integer.toString(deteccion.getProcesosFinalizados()));
+                dElim.setText(Integer.toString(deteccion.getEliminados()));
+                dTiempo.setText(Long.toString(deteccion.getTiempo()));
+                
+                cantRec.setText("0");
                 comboPros.setSelectedIndex(0);
                 comboRec.setSelectedIndex(0);
+                
+                for (int i = 0; i < 150; i++) {
+                    solicitudes[i]=0;
+                }
             }
         } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.toString()+"\n\nPorfavor introduzca un valor valido.", "Error", JOptionPane.ERROR_MESSAGE);

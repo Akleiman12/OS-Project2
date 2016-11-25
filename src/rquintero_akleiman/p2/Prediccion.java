@@ -159,7 +159,7 @@ public class Prediccion {
     
     //Metodos Propios
     
-    private void insertarProceso(int[] max, int posicion){//Insercion de proceso cuando se crea
+    public void insertarProceso(int[] max, int posicion){//Insercion de proceso cuando se crea
         procesosTotal++;
         for(int j=0; j<recursos.length; j++){
             allocation[posicion][j]=0;
@@ -173,9 +173,10 @@ public class Prediccion {
             posicionI=posicion;
     }
     
-    private void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
+    public void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
         boolean finalizo=true;
-        for (int i = 0; i < allocation[posicion][i]; i++) {
+        for (int i = 0; i < allocation[posicion].length; i++) {
+            System.out.println("Maximo:"+maximo[posicion][i]+" allocation:"+allocation[posicion][i]);
             if(allocation[posicion][i]!=maximo[posicion][i])
                 finalizo=false;
         }
@@ -184,20 +185,20 @@ public class Prediccion {
                 disponibles[i]=allocation[posicion][i];
                 allocation[posicion][i]=maximo[posicion][i]=0;
             
-        }
+            }
          finalizados[posicion]=1;
          procesosFinalizados++;
         }
             
     }
-    private boolean checkFinalizo(int posicion){//Ver si un proceso que hizo un requerimiento ya habia finalizado
+    public boolean checkFinalizo(int posicion){//Ver si un proceso que hizo un requerimiento ya habia finalizado
         if(finalizados[posicion]!=0)
             return true;
         else
             return false;
         
     }
-    private boolean asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
+    public boolean asignar(int [] al, int posicion){//Insercion en la matriz allocation cuando se hace una solicitud
         boolean desbloquea=true;
         boolean bloqueado=false;
         for (int j = 0; j < bloqueados[posicion].length; j++) {
@@ -217,6 +218,7 @@ public class Prediccion {
                 if(al[i]>disponibles[i])
                     permitir=false;
             }
+
             if(permitir){
                 for(int j=0; j<recursos.length; j++){
                     allocation[posicion][j]=allocation[posicion][j]+al[j];
@@ -233,7 +235,7 @@ public class Prediccion {
         }
         
     }
-    private void desbloquear (int posicion){//Para desbloquear un proceso previamente bloqueado
+    public void desbloquear (int posicion){//Para desbloquear un proceso previamente bloqueado
         for (int i = 0; i < bloqueados[posicion].length; i++) {
              allocation[posicion][i]=allocation[posicion][i]+bloqueados[posicion][i];
              bloqueados[posicion][i]=0;
@@ -241,7 +243,7 @@ public class Prediccion {
         bloqueadosActual--;
         
     }
-    private void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
+    public void bloquear(int posicion, int[] request){//Bloqueado de proceso por no cumplir el requerimiento     
         for (int i = 0; i < request.length; i++) {
          bloqueados[posicion][i]=request[i];
          allocation[posicion][i]=allocation[posicion][i]-request[i];
@@ -282,7 +284,7 @@ public class Prediccion {
         
     }*/
     
-    void calc_need(){//donde se calcula la matriz necesidad
+    public void calc_need(){//donde se calcula la matriz necesidad
        for(int i=0;i<allocation.length;i++){
             for(int j=0;j<recursos.length;j++){ 
                 necesidad[i][j]=maximo[i][j]-allocation[i][j];
@@ -290,7 +292,7 @@ public class Prediccion {
         }
     }
     
-    private boolean check(int i){
+    public boolean check(int i){
        //se chequea si se pueden asignar todos los recursos
        for(int j=0;j<recursos.length;j++){
        if(disponibles[j]<necesidad[i][j])
@@ -299,7 +301,7 @@ public class Prediccion {
        return true;
     }
     
-    private boolean calcular(int posicion){//banquero
+    public boolean calcular(int posicion){//banquero
         calc_need();
         boolean [] listo = new boolean[allocation.length];
         int aux=0;
@@ -327,7 +329,7 @@ public class Prediccion {
         return false;
        }
     }
-    private void correr(int posicion, int[] request){
+    public void correr(int posicion, int[] request){
         long startTime = System.nanoTime();
         boolean finalizo=checkFinalizo(posicion);
         if(!finalizo){
