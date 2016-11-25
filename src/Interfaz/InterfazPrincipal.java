@@ -585,19 +585,34 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             
             }else{
                 solicitudes[comboRec.getSelectedIndex()-1]=Integer.parseInt(cantRec.getText());
-                prediccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
-                deteccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                int pAllocated[][] = prediccion.getAllocation();
+                int pMax[][] = prediccion.getMaximo();
+                int dAllocated[][] = deteccion.getAllocation();
+                int dMax[][]= deteccion.getMaximo();
                 
-                pBloqTot.setText(Integer.toString(prediccion.getBloqueadosTotal()));
-                pBloq.setText(Integer.toString(prediccion.getBloqueadosActual()));
-                pFin.setText(Integer.toString(prediccion.getProcesosFinalizados()));
-                pTiempo.setText(Long.toString(prediccion.getTiempo()));
+                if(pAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+solicitudes[comboRec.getSelectedIndex()-1]<pMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]){
+                    prediccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                    pBloqTot.setText(Integer.toString(prediccion.getBloqueadosTotal()));
+                    pBloq.setText(Integer.toString(prediccion.getBloqueadosActual()));
+                    pFin.setText(Integer.toString(prediccion.getProcesosFinalizados()));
+                    pTiempo.setText(Long.toString(prediccion.getTiempo()));
+                }else{
+                    JOptionPane.showMessageDialog(null, "No se puede asignar esta cantidad de recursos al proceso.\n  Maximo: "+pMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+"\n  Asignados: "+pAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1], "Error Prediccion", JOptionPane.ERROR_MESSAGE);
+                }
                 
-                dBloqTot.setText(Integer.toString(deteccion.getBloqueadosTotal()));
-                dBloq.setText(Integer.toString(deteccion.getBloqueadosActual()));
-                dFin.setText(Integer.toString(deteccion.getProcesosFinalizados()));
-                dElim.setText(Integer.toString(deteccion.getEliminados()));
-                dTiempo.setText(Long.toString(deteccion.getTiempo()));
+                if(dAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+solicitudes[comboRec.getSelectedIndex()-1]<dMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]){
+                    deteccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                    dBloqTot.setText(Integer.toString(deteccion.getBloqueadosTotal()));
+                    dBloq.setText(Integer.toString(deteccion.getBloqueadosActual()));
+                    dFin.setText(Integer.toString(deteccion.getProcesosFinalizados()));
+                    dElim.setText(Integer.toString(deteccion.getEliminados()));
+                    dTiempo.setText(Long.toString(deteccion.getTiempo()));
+                }else{
+                    JOptionPane.showMessageDialog(null, "No se puede asignar esta cantidad de recursos al proceso.\n  Maximo: "+dMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+"\n  Asignados: "+dAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1], "Error Deteccion", JOptionPane.ERROR_MESSAGE);
+                }
+
+                
+
                 
                 cantRec.setText("0");
                 comboPros.setSelectedIndex(0);
