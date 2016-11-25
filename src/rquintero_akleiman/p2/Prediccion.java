@@ -10,11 +10,11 @@ package rquintero_akleiman.p2;
  * @author Asher y Reynaldo
  */
 public class Prediccion {
-   private int allocation [][];
-   private int maximo[][];
-   private int necesidad[][];
-   private int recursos[];
-   private int disponibles[];
+   private int allocation [][];//matriz asignacion
+   private int maximo[][];//maximo de recursos por proceso
+   private int necesidad[][];//matriz necesidad
+   private int recursos[];//recursos del sistema maximo
+   private int disponibles[];//recursos disponibles del sitema
    private int posicionI;
    private int bloqueados[][];
    private int bloqueadosActual;
@@ -158,7 +158,7 @@ public class Prediccion {
             posicionI=posicion;
     }
     
-    private void finalizar(int posicion){
+    private void finalizar(int posicion){//Saber si finalizar un proceso que ha llegado a sus requerimientos maximos
         boolean finalizo=true;
         for (int i = 0; i < allocation[posicion][i]; i++) {
             if(allocation[posicion][i]!=maximo[posicion][i])
@@ -166,14 +166,16 @@ public class Prediccion {
         }
         if(finalizo){
             for (int i = 0; i < allocation[posicion][i]; i++) {
-            allocation[posicion][i]=maximo[posicion][i]=0;
+                disponibles[i]=allocation[posicion][i];
+                allocation[posicion][i]=maximo[posicion][i]=0;
+            
         }
          finalizados[posicion]=1;
          procesosFinalizados++;
         }
             
     }
-    private boolean checkFinalizo(int posicion){
+    private boolean checkFinalizo(int posicion){//Ver si un proceso que hizo un requerimiento ya habia finalizado
         if(finalizados[posicion]!=0)
             return true;
         else
@@ -197,13 +199,13 @@ public class Prediccion {
         else if(!bloqueado){
             boolean permitir=true;
             for (int i = 0; i < recursos.length; i++) {
-                if(al[i]>recursos[i])
+                if(al[i]>disponibles[i])
                     permitir=false;
             }
             if(permitir){
                 for(int j=0; j<recursos.length; j++){
                     allocation[posicion][j]=allocation[posicion][j]+al[j];
-                    recursos[j]=recursos[j]-al[j];
+                    disponibles[j]=disponibles[j]-al[j];
                 }
             }
             else{
@@ -216,7 +218,7 @@ public class Prediccion {
         }
         
     }
-    private void desbloquear (int posicion){
+    private void desbloquear (int posicion){//Para desbloquear un proceso previamente bloqueado
         for (int i = 0; i < bloqueados[posicion].length; i++) {
              allocation[posicion][i]=allocation[posicion][i]+bloqueados[posicion][i];
              bloqueados[posicion][i]=0;
