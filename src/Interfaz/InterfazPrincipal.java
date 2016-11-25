@@ -25,6 +25,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     int maxRecursos[];
     int maxRecPros[];
     int solicitudes[];
+    int aux[];
+    int eliminadosD[];
     
     int IDpros;
     
@@ -65,6 +67,11 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         solicitudes = new int[150];
         for (int i = 0; i < 150; i++) {
             solicitudes[i]=0;
+        }
+        
+        eliminadosD= new int[150];
+        for (int i = 0; i < 150; i++) {
+            eliminadosD[i]=0;
         }
         
         IDpros=0;
@@ -553,6 +560,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 prediccion.insertarProceso(maxRecPros, IDpros);
                 deteccion.insertarProceso(IDpros, maxRecPros);
                 
+                infoPre.append("El proceso "+idPros.getText()+" ha sido creado.\n");
+                infoDet.append("El proceso "+idPros.getText()+" ha sido creado.\n");
+                
                 comboRecPros.setSelectedIndex(0);
                 idPros.setText("");
                 cantrecpros.setText("");
@@ -592,21 +602,60 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 
                 if(pAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+solicitudes[comboRec.getSelectedIndex()-1]<=pMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]){
                     prediccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
-                    pBloqTot.setText(Integer.toString(prediccion.getBloqueadosTotal()));
-                    pBloq.setText(Integer.toString(prediccion.getBloqueadosActual()));
-                    pFin.setText(Integer.toString(prediccion.getProcesosFinalizados()));
+                    
+                    if(!pBloqTot.getText().equals(Integer.toString(prediccion.getBloqueadosTotal())))
+                        pBloqTot.setText(Integer.toString(prediccion.getBloqueadosTotal()));
+                    
+                    if(!pBloq.getText().equals(Integer.toString(prediccion.getBloqueadosActual()))){
+                        if(Integer.parseInt(pBloq.getText())<prediccion.getBloqueadosActual())
+                            infoPre.append("El proceso "+comboPros.getSelectedItem()+" ha sido bloqueado.\n");
+                        else
+                            infoPre.append("El proceso "+comboPros.getSelectedItem()+" ha sido desbloqueado.\n");
+                        
+                        pBloq.setText(Integer.toString(prediccion.getBloqueadosActual()));
+                    }
+                    if(!pFin.getText().equals(Integer.toString(prediccion.getProcesosFinalizados()))){
+                        pFin.setText(Integer.toString(prediccion.getProcesosFinalizados()));
+                        infoPre.append("El proceso "+comboPros.getSelectedItem()+" ha finalizado.\n");
+                    }
                     pTiempo.setText(Long.toString(prediccion.getTiempo()));
+                    dTotal.setText(Integer.toString(prediccion.getProcesosTotal()));
                 }else{
                     JOptionPane.showMessageDialog(null, "No se puede asignar esta cantidad de recursos al proceso.\n  Maximo: "+pMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+"\n  Asignados: "+pAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1], "Error Prediccion", JOptionPane.ERROR_MESSAGE);
                 }
                 
                 if(dAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+solicitudes[comboRec.getSelectedIndex()-1]<=dMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]){
-                    deteccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
-                    dBloqTot.setText(Integer.toString(deteccion.getBloqueadosTotal()));
-                    dBloq.setText(Integer.toString(deteccion.getBloqueadosActual()));
-                    dFin.setText(Integer.toString(deteccion.getProcesosFinalizados()));
-                    dElim.setText(Integer.toString(deteccion.getEliminados()));
+                    aux=deteccion.correr(comboPros.getSelectedIndex()-1, solicitudes);
+                    
+                    if(!dBloqTot.getText().equals(Integer.toString(deteccion.getBloqueadosTotal())))
+                        dBloqTot.setText(Integer.toString(deteccion.getBloqueadosTotal()));
+                    
+                    if(!dBloq.getText().equals(Integer.toString(deteccion.getBloqueadosActual()))){
+                        if(Integer.parseInt(dBloq.getText())<deteccion.getBloqueadosActual())
+                            infoDet.append("El proceso "+comboPros.getSelectedItem()+" ha sido bloqueado.\n");
+                        else
+                            infoDet.append("El proceso "+comboPros.getSelectedItem()+" ha sido desbloqueado.\n");
+                    
+                        dBloq.setText(Integer.toString(deteccion.getBloqueadosActual()));
+                    }    
+                    if(!dFin.getText().equals(Integer.toString(deteccion.getProcesosFinalizados()))){
+                        dFin.setText(Integer.toString(deteccion.getProcesosFinalizados()));
+                        infoDet.append("El proceso "+comboPros.getSelectedItem()+" ha finalizado.\n");
+                    }
+                    if(!dElim.getText().equals(Integer.toString(deteccion.getEliminados()))){
+                        dElim.setText(Integer.toString(deteccion.getEliminados()));
+                        
+                        for (int i = 0; i < 150; i++) {
+                            System.out.println("si corre");
+                            if(eliminadosD[i]!=aux[i]){
+                                infoDet.append("El proceso "+comboPros.getItemAt(i+1)+" ha sido eliminado. \n");
+                                eliminadosD[i]=aux[i];
+                            }
+                        }
+                    }
+                    
                     dTiempo.setText(Long.toString(deteccion.getTiempo()));
+                    dTotal.setText(Integer.toString(deteccion.getProcesosTotal()));
                 }else{
                     JOptionPane.showMessageDialog(null, "No se puede asignar esta cantidad de recursos al proceso.\n  Maximo: "+dMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+"\n  Asignados: "+dAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1], "Error Deteccion", JOptionPane.ERROR_MESSAGE);
                 }
@@ -625,6 +674,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.toString()+"\n\nPorfavor introduzca un valor valido.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+                       
     }//GEN-LAST:event_solicitudMouseReleased
 
     /**

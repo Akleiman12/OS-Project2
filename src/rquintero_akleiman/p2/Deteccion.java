@@ -209,7 +209,7 @@ public class Deteccion {
         for (int i = 0; i < maximo.length; i++) {
             maximo[posicion][i]=max[i];
         }
-        
+        procesosTotal++;
         marca[posicion]=false;
     }
     
