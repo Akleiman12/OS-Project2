@@ -619,7 +619,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                         infoPre.append("El proceso "+comboPros.getSelectedItem()+" ha finalizado.\n");
                     }
                     pTiempo.setText(Long.toString(prediccion.getTiempo()));
-                    dTotal.setText(Integer.toString(prediccion.getProcesosTotal()));
+                    pTotal.setText(Integer.toString(prediccion.getProcesosTotal()));
                 }else{
                     JOptionPane.showMessageDialog(null, "No se puede asignar esta cantidad de recursos al proceso.\n  Maximo: "+pMax[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1]+"\n  Asignados: "+pAllocated[comboPros.getSelectedIndex()-1][comboRec.getSelectedIndex()-1], "Error Prediccion", JOptionPane.ERROR_MESSAGE);
                 }
